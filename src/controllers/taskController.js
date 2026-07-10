@@ -1,10 +1,25 @@
-const { handleGetTasks, handleCreateTask } = require("../services/taskService");
+const {
+  handleGetTasks,
+  handleCreateTask,
+  handleUpdateTask,
+} = require("../services/taskService");
 
 const createTask = async (req, res, next) => {
   try {
     const taskData = req.body;
     const result = await handleCreateTask(taskData);
     res.status(201).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateTask = async (req, res, next) => {
+  try {
+    const taskId = req.params.id;
+    const taskData = req.body;
+    const result = await handleUpdateTask(taskId, taskData);
+    res.status(200).json(result);
   } catch (error) {
     next(error);
   }
@@ -23,5 +38,6 @@ const getAllTasks = async (req, res, next) => {
 
 module.exports = {
   createTask,
+  updateTask,
   getAllTasks,
 };

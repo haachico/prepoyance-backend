@@ -34,6 +34,59 @@ const handleUpdateTask = async (taskId, taskData) => {
   let connection;
 
   try {
+    connection = await pool.getConnection();
+
+    const { title, description, status, priority, dueDate } = taskData;
+
+    const conditons = [];
+    const values = [];
+
+    if (title) {
+      conditons.push("title = ?");
+      values.push(title);
+    }
+
+    if (description) {
+      conditons.push("description = ?");
+      values.push(description);
+    }
+    if (status) {
+      conditons.push("status = ?");
+      values.push(status);
+    }
+    if (priority) {
+      conditons.push("priority = ?");
+      values.push(priority);
+    }
+    if (dueDate) {
+      conditons.push("due_date = ?");
+      values.push(dueDate);
+    }
+
+    if (conditons.length === 0) {
+      return {
+        success: false,
+        message: "No fields to update",
+      };
+    }
+
+    const [result] = await connection.query(
+      `update tasks set ${conditons.join(", ")} where id = ?`,
+      [...values, taskId],
+    );
+
+    return {
+      success: true,
+      message: "Task updated successfully",
+      data: {
+        id: taskId,
+        title,
+        description,
+        status,
+        priority,
+        dueDate,
+      },
+    };
   } finally {
     if (connection) connection.release();
   }
