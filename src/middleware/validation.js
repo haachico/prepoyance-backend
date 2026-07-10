@@ -1,5 +1,5 @@
 const validateCreateTask = (req, res, next) => {
-  const { title, description, status, priority, due_date } = req.body;
+  const { title, description, status, priority, dueDate } = req.body;
 
   const errors = [];
 
@@ -23,8 +23,8 @@ const validateCreateTask = (req, res, next) => {
     errors.push("Priority must be one of: Low, Medium, High");
   }
 
-  if (due_date) {
-    const selectedDate = new Date(due_date);
+  if (dueDate) {
+    const selectedDate = new Date(dueDate);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -45,7 +45,7 @@ const validateCreateTask = (req, res, next) => {
 };
 
 const validateUpdateTask = (req, res, next) => {
-  const { title, description, status, priority, due_date } = req.body;
+  const { title, description, status, priority, dueDate } = req.body;
 
   const errors = [];
 
@@ -73,8 +73,8 @@ const validateUpdateTask = (req, res, next) => {
     errors.push("Priority must be one of: Low, Medium, High");
   }
 
-  if (due_date) {
-    const selectedDate = new Date(due_date);
+  if (dueDate) {
+    const selectedDate = new Date(dueDate);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 

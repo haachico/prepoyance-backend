@@ -8,14 +8,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/health", (req, res) => {
-  res.json({ message: "Server is running" });
-});
+// app.get("/test", (req, res) => {
+//   res.json({ message: "Server is running" });
+// });
 
 const tasksRoutes = require("./routes/tasksRoutes");
 app.use("/api", tasksRoutes);
 
-const PORT = process.env.PORT || 6000;
+const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

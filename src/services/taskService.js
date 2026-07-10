@@ -10,7 +10,7 @@ const handleCreateTask = async (taskData) => {
 
     const [result] = await connection.query(
       `insert into tasks (title, description, status, priority, due_date) values (?, ? , ?, ?, ?)`,
-      [title, description, status, priority, dueDate],
+      [title, description, status, priority, dueDate || null],
     );
 
     return {
@@ -138,6 +138,7 @@ const handleGetTasks = async (page, limit, title, status, priority) => {
 
     const [countResult] = await connection.query(
       `select count(*) as total from tasks ${whereClause}`,
+      values,
     );
 
     const total = countResult[0].total;
