@@ -41,6 +41,17 @@ const handleUpdateTask = async (taskId, taskData) => {
     const conditons = [];
     const values = [];
 
+    const [task] = await connection.query(`select * from tasks where id = ?`, [
+      taskId,
+    ]);
+
+    if (task.length === 0) {
+      throw {
+        status: 404,
+        message: "Task not found",
+      };
+    }
+
     if (title) {
       conditons.push("title = ?");
       values.push(title);
@@ -136,10 +147,50 @@ const handleGetTaskById = async (taskId) => {
       taskId,
     ]);
 
+    if (task.length === 0) {
+      throw {
+        status: 404,
+        message: "Task not found",
+      };
+    }
+
     return {
       success: true,
       message: "Task fetched successfully",
       data: task[0],
+    };
+  } finally {
+    if (connection) connection.release();
+  }
+};
+
+const handleDeleteTask = async (taskId) => {
+  let connection;
+
+  try {
+    connection = await pool.getConnection();
+
+    const [task] = await connection.query(`select * from tasks where id = ?`, [
+      taskId,
+    ]);
+
+    if (task.length === 0) {
+      throw {
+        status: 404,
+        message: "Task not found",
+      };
+    }
+
+    const [result] = await connection.query(`delete from tasks where id = ?`, [
+      taskId,
+    ]);
+
+    return {
+      success: true,
+      message: "Task deleted successfully",
+      data: {
+        id: taskId,
+      },
     };
   } finally {
     if (connection) connection.release();
@@ -151,4 +202,5 @@ module.exports = {
   handleUpdateTask,
   handleGetTasks,
   handleGetTaskById,
+  handleDeleteTask,
 };
