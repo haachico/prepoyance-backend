@@ -5,6 +5,7 @@ const cors = require("cors");
 
 const app = express();
 
+// note to viewer: leaving cors like this for now in dev, but in production, will restrict CORS to frontend URL
 app.use(cors());
 app.use(express.json());
 
