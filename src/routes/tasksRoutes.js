@@ -3,6 +3,7 @@ const {
   getAllTasks,
   createTask,
   updateTask,
+  getTaskById,
 } = require("../controllers/taskController");
 const {
   validateCreateTask,
@@ -14,4 +15,6 @@ const router = express.Router();
 router.post("/tasks", validateCreateTask, createTask);
 router.put("/tasks/:id", validateUpdateTask, updateTask);
 router.get("/tasks", getAllTasks);
+router.get("/tasks/:id", getTaskById);
+
 module.exports = router;

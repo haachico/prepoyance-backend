@@ -126,8 +126,29 @@ const handleGetTasks = async (page, limit) => {
   }
 };
 
+const handleGetTaskById = async (taskId) => {
+  let connection;
+
+  try {
+    connection = await pool.getConnection();
+
+    const [task] = await connection.query(`select * from tasks where id = ?`, [
+      taskId,
+    ]);
+
+    return {
+      success: true,
+      message: "Task fetched successfully",
+      data: task[0],
+    };
+  } finally {
+    if (connection) connection.release();
+  }
+};
+
 module.exports = {
   handleCreateTask,
   handleUpdateTask,
   handleGetTasks,
+  handleGetTaskById,
 };

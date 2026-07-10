@@ -2,6 +2,7 @@ const {
   handleGetTasks,
   handleCreateTask,
   handleUpdateTask,
+  handleGetTaskById,
 } = require("../services/taskService");
 
 const createTask = async (req, res, next) => {
@@ -36,8 +37,27 @@ const getAllTasks = async (req, res, next) => {
   }
 };
 
+const getTaskById = async (req, res, next) => {
+  try {
+    const taskId = req.params.id;
+
+    if (!taskId || parseInt(taskId) <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid task ID",
+      });
+    }
+
+    const result = await handleGetTaskById(taskId);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createTask,
   updateTask,
   getAllTasks,
+  getTaskById,
 };
