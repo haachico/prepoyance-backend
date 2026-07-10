@@ -31,7 +31,12 @@ const getAllTasks = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const result = await handleGetTasks(page, limit);
+
+    const title = req.query.title || null;
+    const status = req.query.status || null;
+    const priority = req.query.priority || null;
+
+    const result = await handleGetTasks(page, limit, title, status, priority);
     res.status(200).json(result);
   } catch (error) {
     next(error);

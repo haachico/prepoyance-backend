@@ -103,20 +103,41 @@ const handleUpdateTask = async (taskId, taskData) => {
   }
 };
 
-const handleGetTasks = async (page, limit) => {
+const handleGetTasks = async (page, limit, title, status, priority) => {
   let connection;
   try {
     connection = await pool.getConnection();
     const offset = (page - 1) * limit;
 
+    let condtions = [];
+    let values = [];
+
+    if (title) {
+      condtions.push("title like ?");
+      values.push(`%${title}%`);
+    }
+
+    if (status) {
+      condtions.push("status = ?");
+      values.push(status);
+    }
+
+    if (priority) {
+      condtions.push("priority = ?");
+      values.push(priority);
+    }
+
+    const whereClause =
+      condtions.length > 0 ? `where ${condtions.join(" and ")}` : "";
+
     const [tasks] = await connection.query(
-      `select * from tasks 
+      `select * from tasks ${whereClause}
         limit ? offset ?`,
-      [limit, offset],
+      [...values, limit, offset],
     );
 
     const [countResult] = await connection.query(
-      `select count(*) as total from tasks`,
+      `select count(*) as total from tasks ${whereClause}`,
     );
 
     const total = countResult[0].total;
